@@ -17,23 +17,30 @@ const PORT = process.env.PORT || 4000;
 // -------------------- MIDDLEWARE -------------------- //
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://analytic-dashboard-frontend.vercel.app/login",
   "https://analytic-dashboard-frontend.vercel.app",
   "https://analytic-dashboard-frontend-5kao8fv57.vercel.app",
-  "https://analytic-dashb-git-55e11f-jerinrubaiyakhan11-gmailcoms-projects.vercel.app/"
+  "https://analytic-dashb-git-55e11f-jerinrubaiyakhan11-gmailcoms-projects.vercel.app"
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 app.use(express.json());
 app.use(cookieParser());
+
 
 // -------------------- HARD-CODED USER -------------------- //
 const user = {
