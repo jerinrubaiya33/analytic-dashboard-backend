@@ -18,8 +18,10 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = [
   "http://localhost:3000",
   "https://analytic-dashboard-frontend.vercel.app",
-  "https://analytic-dashboard-frontend-5kao8fv57.vercel.app",
-  "https://analytic-dashb-git-55e11f-jerinrubaiyakhan11-gmailcoms-projects.vercel.app"
+  "https://analytic-dashboard-frontend-5kao8fv57.vercel.app", 
+  "https://analytic-dashb-git-55e11f-jerinrubaiyakhan11-gmailcoms-projects.vercel.app",
+  "https://analytic-dashboard-frontend-git-main-jerinrubaiyakhan11-gmailcoms-projects.vercel.app",
+  "https://analytic-dashboard-frontend.vercel.app"
 ];
 
 app.use(
