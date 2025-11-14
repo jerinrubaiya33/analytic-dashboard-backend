@@ -315,14 +315,44 @@ const user = {
 const JWT_SECRET: string = process.env.JWT_SECRET || "default_secret";
 
 // -------------------- JWT AUTHENTICATION MIDDLEWARE -------------------- //
-function authenticateToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies.token;
+// function authenticateToken(req: Request, res: Response, next: NextFunction) {
+//   const token = req.cookies.token;
   
-  console.log("🔐 Auth Middleware - Cookies:", req.cookies);
-  console.log("🔐 Auth Middleware - Token present:", !!token);
+//   console.log("🔐 Auth Middleware - Cookies:", req.cookies);
+//   console.log("🔐 Auth Middleware - Token present:", !!token);
+
+//   if (!token) {
+//     console.log("❌ No token provided");
+//     return res.status(401).json({ message: "Unauthorized: No token provided" });
+//   }
+
+//   try {
+//     const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
+//     (req as any).user = decoded;
+//     console.log("✅ Token verified for user:", decoded.email);
+//     next();
+//   } catch (err) {
+//     console.log("❌ Token verification failed:", err);
+//     return res.status(403).json({ message: "Forbidden: Invalid or expired token" });
+//   }
+// }
+// In your backend index.ts - UPDATED AUTH MIDDLEWARE
+function authenticateToken(req: Request, res: Response, next: NextFunction) {
+  let token = req.cookies.token;
+  
+  // ALSO accept token from Authorization header
+  const authHeader = req.headers.authorization;
+  if (!token && authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.substring(7); // Remove 'Bearer ' prefix
+  }
+
+  console.log("🔐 Auth Debug - Token from:", {
+    cookies: req.cookies,
+    authHeader: authHeader,
+    tokenPresent: !!token
+  });
 
   if (!token) {
-    console.log("❌ No token provided");
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
 
@@ -363,6 +393,41 @@ app.get("/api/debug-auth", authenticateToken, (req: Request, res: Response) => {
 });
 
 // Login route
+// app.post("/api/login", (req: Request, res: Response) => {
+//   const { email, password } = req.body;
+  
+//   console.log("🔑 Login attempt for:", email);
+
+//   if (!email || !password) {
+//     return res.status(400).json({ message: "Email and password are required" });
+//   }
+
+//   if (email === user.email && password === user.password) {
+//     const payload = { email: user.email };
+//     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+
+//     // Enhanced cookie settings
+//     res.cookie("token", token, {
+//       httpOnly: true,
+//       secure: true, // Always use HTTPS in production
+//       sameSite: "none", // Required for cross-site
+//       path: "/",
+//       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     });
+
+//     console.log("✅ Login successful for:", email);
+    
+//     return res.status(200).json({
+//       message: "Login successful",
+//       user: { email: user.email },
+//       token, // Still return token in response for debugging
+//     });
+//   }
+
+//   console.log("❌ Login failed for:", email);
+//   return res.status(401).json({ message: "Invalid email or password" });
+// });
+// In login route - make sure token is returned
 app.post("/api/login", (req: Request, res: Response) => {
   const { email, password } = req.body;
   
@@ -376,21 +441,22 @@ app.post("/api/login", (req: Request, res: Response) => {
     const payload = { email: user.email };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
 
-    // Enhanced cookie settings
+    // Set cookie (for browsers that support it)
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // Always use HTTPS in production
-      sameSite: "none", // Required for cross-site
+      secure: true,
+      sameSite: "none",
       path: "/",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     console.log("✅ Login successful for:", email);
     
+    // ALSO return token in response body for localStorage
     return res.status(200).json({
       message: "Login successful",
       user: { email: user.email },
-      token, // Still return token in response for debugging
+      token, // This is crucial for frontend storage
     });
   }
 
