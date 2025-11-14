@@ -384,6 +384,18 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Add this RIGHT AFTER your CORS middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log("=== REQUEST DEBUG ===");
+  console.log("URL:", req.url);
+  console.log("Method:", req.method);
+  console.log("Authorization Header:", req.headers.authorization);
+  console.log("Cookies:", req.cookies);
+  console.log("All Headers:", req.headers);
+  console.log("==============================");
+  next();
+});
+
 // -------------------- HARD-CODED USER -------------------- //
 const user = {
   email: process.env.ADMIN_EMAIL || "admin@example.com",
