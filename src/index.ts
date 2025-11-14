@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 4000;
 // -------------------- MIDDLEWARE -------------------- //
 const allowedOrigins = [
   "http://localhost:3000",
+  "https://analytic-dashboard-frontend.vercel.app/login",
   "https://analytic-dashboard-frontend.vercel.app",
   "https://analytic-dashboard-frontend-5kao8fv57.vercel.app",
   "https://analytic-dashb-git-55e11f-jerinrubaiyakhan11-gmailcoms-projects.vercel.app/"
@@ -86,12 +87,13 @@ app.post("/api/login", (req: Request, res: Response) => {
     const payload = { email: user.email };
     const token = jwt.sign(payload, JWT_SECRET);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      // path: "/",
-    });
+   res.cookie("token", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
+});
+
 
     return res.status(200).json({
       message: "Login successful",
