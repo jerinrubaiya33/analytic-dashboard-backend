@@ -432,14 +432,20 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // -------------------- MIDDLEWARE -------------------- //
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://analytic-dashboard-frontend.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
