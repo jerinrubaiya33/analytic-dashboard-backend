@@ -60,6 +60,7 @@ npm install
 ```
 ## Run
 npm run dev
+
 **Please add .env file both on frontend and backend**
 
 ## Environment Setup
