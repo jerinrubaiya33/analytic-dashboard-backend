@@ -59,7 +59,9 @@ cd product-dashboard-backend
 npm install
 ```
 ## Run
+```text
 npm run dev
+```
 
 **Please add .env file both on frontend and backend**
 
