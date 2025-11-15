@@ -48,7 +48,7 @@ Prerequisites
 
 Node.js 18+
 
-npm or yarn
+npm or yarn 
 
 Firebase project with service account credentials
 
@@ -58,6 +58,9 @@ git clone <repository-url>
 cd product-dashboard-backend
 npm install
 ```
+## Run
+npm run dev
+**Please add .env file both on frontend and backend**
 
 ## Environment Setup
 
@@ -68,7 +71,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json
 PORT=4000
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=password123
-FIREBASE_ADMIN_JSON='{"....."}'
+FIREBASE_ADMIN_JSON='{".....couldn't add here"}'
 ```
 ## Run Development Server
 ```text
@@ -100,9 +103,14 @@ All product endpoints are JWT protected.
 ## 🏗 Production Build
 # Compile TypeScript
 ```text npm run build ```
+```TypeScript Installation ```
+npm install --save-dev typescript ts-node nodemon @types/node
+
+npx tsc --init
+
 
 # Start server
- ```text npm start ```
+ ``` npm run dev ```
 
 🔧 Development Scripts
 **npm run dev**         # Start development server with nodemon
